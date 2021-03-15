@@ -35,8 +35,8 @@ def initCatalog():
     return model.newCatalog()
 
 def loadData(catalog):
-    loadVideos(catalog)
     loadCategories(catalog)
+    loadVideos(catalog)
 
 def loadVideos(catalog):
     videofile = cf.data_dir + 'Videos/videos-large.csv'
@@ -64,6 +64,9 @@ def VideoPaisConMasTendencia(catalog,paisInteres):
 def VideosConMasViewsPorPais(catalog,paisInteres,idCategoria):
     return model.VideosConMasViewsPorPais(catalog,paisInteres,idCategoria)
 
+def VideosConMasLikes2(catalog,idCategoria):
+    return model.VideosConMasLikes2(catalog,idCategoria)
+
 def VideoCategoriaConMasTendencia(catalog,catalogOrdenado,categoria):
     return model.VideoCategoriaConMasTendencia(catalog, catalogOrdenado, categoria)
 
@@ -74,3 +77,6 @@ def VideosConMasLikesPorPaisTag(listaOrdenada,paisInteres,TagInteres,numeroEleme
 
 def asignarNombreCategoryToID(catalog,elemento):
     return model.asignarNombreCategoryToID(catalog,elemento)
+
+def asignarNombreCategoryToID2(catalog,elemento):
+    return model.asignarNombreCategoryToID2(catalog,elemento)

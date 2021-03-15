@@ -43,24 +43,36 @@ los mismos.
 # Construccion de modelos
 
 def newCatalog():
-    catalog = {'video': None, 'category': None,'tags': None}
+    catalog = {'video': None, 'category': None}
     catalog['video'] = lt.newList('ARRAY_LIST',cmpfunction=cmpVideosByViews)
-    catalog['category'] = lt.newList('ARRAY_LIST')
+
+    catalog['category'] = mp.newMap(33,
+                                    maptype='PROBING',
+                                    loadfactor=0.5,
+                                    comparefunction=CompareMapCategory)
     return catalog
 
 def addVideo(catalog, video):
     lt.addLast(catalog['video'], video)
+    addVideoCategory(catalog,video)
 
 def addCategory(catalog, category):
     cat = newCategory(category['id'], category['name'])
-    lt.addLast(catalog['category'], cat)
+    mp.put(catalog['category'], cat['Category_id'], cat)
 
 def newCategory(id, name):
-    Category = {'Category_id': '', 'name': ''}
+    Category = {'Category_id': '', 'name': '','video':None}
     Category['Category_id'] = id
     Category['name'] = name.strip()
+    Category['video'] = lt.newList('ARRAY_LIST')
     return Category
 
+def addVideoCategory(catalog,video):
+    videoCategoryID = video['category_id']
+    CategoryInfo = mp.get(catalog['category'],videoCategoryID)
+    if CategoryInfo:
+        listaVideos = me.getValue(CategoryInfo)['video']
+        lt.addLast(listaVideos,video)
 
 # Funciones para agregar informacion al catalogo
 
@@ -141,6 +153,21 @@ def asignarNombreCategoryToID(catalog,elemento):
     if (index==-1):
         return index
     category_id=lt.getElement(categoryName,index)['Category_id']
+    return category_id
+
+def asignarNombreCategoryToID2(catalog,elemento):
+    elemento=elemento.lower()
+    i=1
+    Verifica=True
+    category_id=-1
+    while i<=(lt.size(mp.keySet(catalog['category']))+1) and Verifica:
+        Name=mp.get(catalog['category'],lt.getElement(mp.keySet(catalog['category']),i))
+        Name = me.getValue(Name)['name']
+        if Name.lower()==elemento:
+            elemento
+            category_id=lt.getElement(mp.keySet(catalog['category']),i)
+            Verifica=False
+        i+=1
     return category_id
 
 def subListaDeCategoria(listaOrdenada,index,elemento):
@@ -263,6 +290,14 @@ def VideosConMasViewsPorPais(listaOrdenada,paisInteres,idCategoria):
         listaSoloCategoria=subListaDeCategories(listaOrdenadaCategoria,indexCategory,idCategoria)
         listaPaisViews=VideosByViews(listaSoloCategoria)
     return listaPaisViews
+
+def VideosConMasLikes2(catalog,idCategoria):
+    idCategoria = mp.get(catalog['category'], idCategoria)
+    if idCategoria:
+        listaPaisViews = me.getValue(idCategoria)['video']
+        listaPaisViews = VideosBylikes(listaPaisViews)
+        return listaPaisViews
+    return None
 
 def VideosConMasLikesPorPaisTag(listaOrdenada,paisInteres,TagInteres,numeroElementos,opcion):
     indexProvi=busquedaBinariaPaises(listaOrdenada,paisInteres)
@@ -460,15 +495,12 @@ def VideosByTDate(listaOrdenada):
         i += 1
     return ListaOrdenaDates
 
+def CompareMapCategory(id,Category):
+    Categoryentry = me.getKey(Category)
+    if (id == Categoryentry):
+        return 0
+    elif (id > Categoryentry):
+        return 1
+    else:
+        return 0
 
-# Construccion de modelos
-
-# Funciones para agregar informacion al catalogo
-
-# Funciones para creacion de datos
-
-# Funciones de consulta
-
-# Funciones utilizadas para comparar elementos dentro de una lista
-
-# Funciones de ordenamiento
