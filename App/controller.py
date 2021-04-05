@@ -40,20 +40,21 @@ def loadData(catalog):
     delta_time = -1.0
     delta_memory = -1.0
 
-    tracemalloc.start()
+    #tracemalloc.start()
     start_time = getTime()
-    start_memory = getMemory()
+    #start_memory = getMemory()
 
 
     #loadCategories(catalog)
     loadVideos(catalog)
 
-    stop_memory = getMemory()
+    #stop_memory = getMemory()
     stop_time = getTime()
-    tracemalloc.stop()
+    #tracemalloc.stop()
 
     delta_time = stop_time - start_time
-    delta_memory = deltaMemory(start_memory, stop_memory)
+    #delta_memory = deltaMemory(start_memory, stop_memory)
+    
 
     return delta_time, delta_memory
 

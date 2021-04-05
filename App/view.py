@@ -132,7 +132,7 @@ while True:
         print('Videos cargados exitósamente: ' + str(lt.size(catalog['video'])))
         video=lt.getElement(catalog['video'],1)
         print('1- Titulo: '+ video['title'],'; Nombre del Canal: ', video['channel_title'], 'Fecha de tendencia: ',video['trending_date'],'; Visitas del Video: ', video['views'],'; Likes del Video: ',video['likes'],'; Dislikes del Video: ',video['dislikes'])
-        #printTodasLasCategorias(catalog)
+        printTodasLasCategorias(catalog)
 
     elif inputs == 2:
         if len(catalog)==0:

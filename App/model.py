@@ -51,16 +51,16 @@ def newCatalog():
                                    loadfactor=0.5,
                                    comparefunction=compareMapCountry)
 
-    """catalog['category'] = mp.newMap(33,
+    catalog['category'] = mp.newMap(33,
                                     maptype='PROBING',
                                     loadfactor=0.5,
-                                    comparefunction=CompareMapCategory)"""
+                                    comparefunction=CompareMapCategory)
     return catalog
 
 def addVideo(catalog, video):
     lt.addLast(catalog['video'], video)
     addVideoCountry(catalog,video)
-    #addVideoCategory(catalog,video)
+    addVideoCategory(catalog,video)
 
 def addCategory(catalog, category):
     cat = newCategory(category['id'], category['name'])
@@ -75,14 +75,13 @@ def newCategory(id, name):
 
 def newCountry(name):
     Country = {'name': "",
-              "videos": None}
+              "video": None}
     Country['name'] = name
-    Country['videos'] = lt.newList('SINGLE_LINKED', compareExistenceID)
+    Country['video'] = lt.newList('SINGLE_LINKED', compareExistenceID)
     return Country
 
 def addVideoCountry(catalog, video):
     Countryname = video['country']
-    countrys = catalog['country']
     existcountry = mp.contains(catalog['country'], Countryname)
     if existcountry:
         entry = mp.get(catalog['country'], Countryname)
@@ -90,7 +89,7 @@ def addVideoCountry(catalog, video):
     else:
         country = newCountry(Countryname)
         mp.put(catalog['country'], Countryname, country)
-    lt.addLast(country['videos'], video)
+    lt.addLast(country['video'], video)
 
 def addVideoCategory(catalog,video):
     videoCategoryID = video['category_id']
