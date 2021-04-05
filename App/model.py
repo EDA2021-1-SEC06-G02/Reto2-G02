@@ -73,7 +73,7 @@ def newCategory(id, name):
     Category['video'] = lt.newList('SINGLE_LINKED', compareExistenceID)
     return Category
 
-""""def newCountry(name):
+"""def newCountry(name):
     Country = {'name': "",
               "videos": None}
     Country['name'] = name
@@ -90,7 +90,7 @@ def addVideoCountry(catalog, video):
     else:
         country = newCountry(Countryname)
         mp.put(countrys, Countryname, country)
-    lt.addLast(country['videos'], video)""""
+    lt.addLast(country['videos'], video)"""
 
 def addVideoCategory(catalog,video):
     videoCategoryID = video['category_id']
