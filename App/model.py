@@ -46,6 +46,11 @@ def newCatalog():
     catalog = {'video': None, 'category': None}
     catalog['video'] = lt.newList('ARRAY_LIST',cmpfunction=cmpVideosByViews)
 
+"""    catalog['country'] = mp.newMap(7,
+                                   maptype='PROBING',
+                                   loadfactor=0.5,
+                                   comparefunction=compareMapCountry)"""
+
     catalog['category'] = mp.newMap(33,
                                     maptype='PROBING',
                                     loadfactor=0.5,
@@ -54,6 +59,7 @@ def newCatalog():
 
 def addVideo(catalog, video):
     lt.addLast(catalog['video'], video)
+#    addVideoCountry(catalog,video)
     addVideoCategory(catalog,video)
 
 def addCategory(catalog, category):
@@ -64,8 +70,27 @@ def newCategory(id, name):
     Category = {'Category_id': '', 'name': '','video':None}
     Category['Category_id'] = id
     Category['name'] = name.strip()
-    Category['video'] = lt.newList('ARRAY_LIST')
+    Category['video'] = lt.newList('SINGLE_LINKED', compareExistenceID)
     return Category
+
+"""def newCountry(name):
+    Country = {'name': "",
+              "videos": None}
+    Country['name'] = name
+    Country['videos'] = lt.newList('SINGLE_LINKED', compareExistenceID)
+    return Country
+
+def addVideoCountry(catalog, video):
+    Countryname = video['country'].strip()
+    countrys = catalog['country']
+    existcountry = mp.contains(countrys, Countryname)
+    if existcountry:
+        entry = mp.get(countrys, Countryname)
+        country = me.getValue(entry)
+    else:
+        country = newCountry(Countryname)
+        mp.put(countrys, Countryname, country)
+    lt.addLast(country['videos'], video)"""
 
 def addVideoCategory(catalog,video):
     videoCategoryID = video['category_id']
@@ -500,6 +525,15 @@ def CompareMapCategory(id,Category):
     if (id == Categoryentry):
         return 0
     elif (id > Categoryentry):
+        return 1
+    else:
+        return 0
+
+def compareMapCountry(id,Country):
+    Countryentry = me.getKey(Country)
+    if (id == Countryentry):
+        return 0
+    elif (id > Countryentry):
         return 1
     else:
         return 0
