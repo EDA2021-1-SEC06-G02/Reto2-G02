@@ -45,7 +45,7 @@ def loadData(catalog):
     start_memory = getMemory()
 
 
-    loadCategories(catalog)
+    #loadCategories(catalog)
     loadVideos(catalog)
 
     stop_memory = getMemory()

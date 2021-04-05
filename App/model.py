@@ -44,23 +44,23 @@ los mismos.
 
 def newCatalog():
     catalog = {'video': None, 'category': None}
-    catalog['video'] = lt.newList('ARRAY_LIST',cmpfunction=cmpVideosByViews)
+    catalog['video'] = lt.newList('ARRAY_LIST')
 
-    """    catalog['country'] = mp.newMap(7,
+    catalog['country'] = mp.newMap(7,
                                    maptype='PROBING',
                                    loadfactor=0.5,
-                                   comparefunction=compareMapCountry)"""
+                                   comparefunction=compareMapCountry)
 
-    catalog['category'] = mp.newMap(33,
+    """catalog['category'] = mp.newMap(33,
                                     maptype='PROBING',
                                     loadfactor=0.5,
-                                    comparefunction=CompareMapCategory)
+                                    comparefunction=CompareMapCategory)"""
     return catalog
 
 def addVideo(catalog, video):
     lt.addLast(catalog['video'], video)
-#    addVideoCountry(catalog,video)
-    addVideoCategory(catalog,video)
+    addVideoCountry(catalog,video)
+    #addVideoCategory(catalog,video)
 
 def addCategory(catalog, category):
     cat = newCategory(category['id'], category['name'])
@@ -73,7 +73,7 @@ def newCategory(id, name):
     Category['video'] = lt.newList('SINGLE_LINKED', compareExistenceID)
     return Category
 
-"""def newCountry(name):
+def newCountry(name):
     Country = {'name': "",
               "videos": None}
     Country['name'] = name
@@ -81,16 +81,16 @@ def newCategory(id, name):
     return Country
 
 def addVideoCountry(catalog, video):
-    Countryname = video['country'].strip()
+    Countryname = video['country']
     countrys = catalog['country']
-    existcountry = mp.contains(countrys, Countryname)
+    existcountry = mp.contains(catalog['country'], Countryname)
     if existcountry:
-        entry = mp.get(countrys, Countryname)
+        entry = mp.get(catalog['country'], Countryname)
         country = me.getValue(entry)
     else:
         country = newCountry(Countryname)
-        mp.put(countrys, Countryname, country)
-    lt.addLast(country['videos'], video)"""
+        mp.put(catalog['country'], Countryname, country)
+    lt.addLast(country['videos'], video)
 
 def addVideoCategory(catalog,video):
     videoCategoryID = video['category_id']
