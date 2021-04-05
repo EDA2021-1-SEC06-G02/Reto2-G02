@@ -56,9 +56,6 @@ cataOrdenCategorias = {}
 def initCatalog ():
     return controller.initCatalog()
 
-def loadData(catalog):
-    controller.loadData(catalog)
-
 def printResultVideosByViews(listaOrdenada, paisInteres,sample=10):
     size = lt.size(listaOrdenada)
     if size <= sample:
@@ -129,16 +126,13 @@ while True:
     inputs = int(input('Seleccione una opción para continuar\n'))
     if inputs == 1:
         print("Cargando información de los archivos ....")
-        t1 = time.process_time()
         catalog = initCatalog()
-        loadData(catalog)
-        t2 = time.process_time()
-        time_mseg = (t2 - t1)*1000
+        answer = controller.loadData(catalog)
+        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ","Memoria [kB]: ", f"{answer[1]:.3f}")
         print('Videos cargados exitósamente: ' + str(lt.size(catalog['video'])))
         video=lt.getElement(catalog['video'],1)
         print('1- Titulo: '+ video['title'],'; Nombre del Canal: ', video['channel_title'], 'Fecha de tendencia: ',video['trending_date'],'; Visitas del Video: ', video['views'],'; Likes del Video: ',video['likes'],'; Dislikes del Video: ',video['dislikes'])
         printTodasLasCategorias(catalog)
-        print ("Tiempo de ejecucion: ",time_mseg," milisegundos.")
 
     elif inputs == 2:
         if len(catalog)==0:
