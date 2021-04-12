@@ -87,7 +87,7 @@ def addVideoCountry(catalog, video):
     else:
         country = newCountry(Countryname)
         mp.put(catalog['country'], Countryname, country)
-    lt.addLast(country['video'], video)
+    #lt.addLast(country['video'], video)
 
 def addVideoCategory(catalog,video):
     videoCategoryID = video['category_id']
@@ -390,7 +390,8 @@ def VideosConMasLikes2(catalog,idCategoria):
 def VideosPaisMasLikes(catalog,idCategoria,numeroElementos,paisInteres):
     idCategoria = mp.get(catalog['category'], idCategoria)
     Pais = mp.get(catalog['country'], paisInteres)
-    listaPaisViews={}
+    print(catalog['country'])
+    listaPaisViews=lt.newList('ARRAY_LIST',cmpfunction=compareExistenceID)
     if idCategoria and Pais:
         listaViews = me.getValue(idCategoria)['video']
         listaPais = me.getValue(Pais)['video']
@@ -404,7 +405,6 @@ def VideosPaisMasLikes(catalog,idCategoria,numeroElementos,paisInteres):
             if lt.size(listaPaisViews)==numeroElementos:
                 verifica=False
             i+=1
-        print(lt.size(listaPaisViews),"; ",numeroElementos)
         return listaPaisViews
     return None
 
@@ -557,12 +557,12 @@ def CompareMapCategory(id,Category):
     else:
         return 0
 
-def compareMapCountry(id,Country):
+def compareMapCountry(name,Country):
     Countryentry = me.getKey(Country)
-    if (id == Countryentry):
+    if (name == Countryentry):
         return 0
-    elif (id > Countryentry):
+    elif (name > Countryentry):
         return 1
     else:
-        return 0
+        return -1
 

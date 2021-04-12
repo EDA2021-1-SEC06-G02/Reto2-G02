@@ -113,7 +113,7 @@ def printTodasLasCategorias(catalog):
         ID=lt.getElement(mp.keySet(catalog['category']),i)
         Name=mp.get(catalog['category'],lt.getElement(mp.keySet(catalog['category']),i))
         Name = me.getValue(Name)['name']
-        print("ID- ",ID," Name- ",Name)
+        print(i,"- ID- ",ID," Name- ",Name)
 
 def VideoCategoriaConMasTendencia(catalog, catalogOrdenado,categoria):
     return controller.VideoCategoriaConMasTendencia(catalog,catalogOrdenado,categoria)
@@ -133,6 +133,7 @@ while True:
         video=lt.getElement(catalog['video'],1)
         print('1- Titulo: '+ video['title'],'; Nombre del Canal: ', video['channel_title'], 'Fecha de tendencia: ',video['trending_date'],'; Visitas del Video: ', video['views'],'; Likes del Video: ',video['likes'],'; Dislikes del Video: ',video['dislikes'])
         printTodasLasCategorias(catalog)
+        print(mp.keySet(catalog['country']))
 
     elif inputs == 2:
         if len(catalog)==0:
@@ -257,10 +258,10 @@ while True:
             if idCategoria==-1:
                 print("La categoría consultada no existe intente nuevamente")
             else:
-                listaVideoViesPais=controller.VideosConMasLikes2(catalog,idCategoria,numeroElementos)
+                listaVideoViesPais=controller.VideosPaisMasLikes(catalog,idCategoria,numeroElementos,"canada")
                 stop_time = time.process_time()
                 elapsed_time_mseg = (stop_time - start_time)*1000
-                printResultVideosByLikes2(listaVideoViesPais,numeroElementos)
+                #printResultVideosByLikes2(listaVideoViesPais,numeroElementos)
                 print("El tiempo de ejecución de la consulta es: ",elapsed_time_mseg)
     else:
         sys.exit(0)
