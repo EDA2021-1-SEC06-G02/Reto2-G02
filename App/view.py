@@ -169,7 +169,7 @@ while True:
                 numeroElementos= int(input("¿Cuantos elementos quiere comparar?:\t"))
             start_time = time.process_time()
             TagInteres=input("Ingrese el nombre del tag que desea consultar:\t")
-            paisInteres = input("Ingrese el nombre del país del cual quiere conocer los videos con más likes en el tag de interés:\t")
+            paisInteres = input("Ingrese el nombre del país del cual quiere conocer los videos con más likes en el tag de interés:     ")
             print("Estamos realizando su consulta re reogamos que tenga un poco de paciencia")
             print("Desea conocer los resultados con videos repetidos?")
             print("1- Si")
