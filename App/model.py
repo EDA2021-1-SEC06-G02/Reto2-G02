@@ -87,7 +87,7 @@ def addVideoCountry(catalog, video):
     else:
         country = newCountry(Countryname)
         mp.put(catalog['country'], Countryname, country)
-    #lt.addLast(country['video'], video)
+    lt.addLast(country['video'], video)
 
 def addVideoCategory(catalog,video):
     videoCategoryID = video['category_id']
@@ -188,16 +188,19 @@ def asignarNombreCategoryToID2(catalog,elemento):
     elemento=elemento.lower()
     i=1
     Verifica=True
-    category_id=-1
-    while i<=(lt.size(mp.keySet(catalog['category']))+1) and Verifica:
-        Name=mp.get(catalog['category'],lt.getElement(mp.keySet(catalog['category']),i))
-        Name = me.getValue(Name)['name']
-        if Name.lower()==elemento:
-            elemento
-            category_id=lt.getElement(mp.keySet(catalog['category']),i)
-            Verifica=False
-        i+=1
-    return category_id
+    category_id=0
+    try:
+        while i<=(lt.size(mp.keySet(catalog['category']))+1) and Verifica:
+            Name=mp.get(catalog['category'],lt.getElement(mp.keySet(catalog['category']),i))
+            Name = me.getValue(Name)['name']
+            if Name.lower()==elemento:
+                elemento
+                category_id=lt.getElement(mp.keySet(catalog['category']),i)
+                Verifica=False
+            i+=1
+        return category_id
+    except: 
+        return -1
 
 # Sublistas
 
@@ -286,16 +289,16 @@ def subListaDeCategories(listaOrdenada,index,elemento):
 
 #Requerimientos
 
-def VideoPaisConMasTendencia(listaOrdenada,paisInteres):
-    indexProvi=busquedaBinariaPaises(listaOrdenada,paisInteres)
-    if(indexProvi==-1):
-        return -1,0
-    else:
-        listaSoloPaises=subListaDePais(listaOrdenada,indexProvi,paisInteres)
-        listaOrdenID=VideoConMasTendencia(listaSoloPaises)
-        videoTendenciaID,DiasEnTendencia=VideoConMasDiasEnTendencia(listaOrdenID)
-        videoTendencia=lt.getElement(listaOrdenID,busquedaBinariaID(listaOrdenID,videoTendenciaID))
-        return videoTendencia,DiasEnTendencia
+def VideoPaisConMasTendencia(catalog,paisInteres):
+        Pais = mp.get(catalog['country'], paisInteres)
+        if Pais:
+            listaPais = me.getValue(Pais)['video']
+            listaOrdenID = VideosByID(listaPais)
+            videoTendenciaID,DiasEnTendencia=VideoConMasDiasEnTendencia(listaOrdenID)
+            videoTendencia=lt.getElement(listaOrdenID,busquedaBinariaID(listaOrdenID,videoTendenciaID))
+            return videoTendencia,DiasEnTendencia
+        else:
+            return -1,-1
 
 def NombreAId (catalog,categoria):
     id = -1
@@ -390,17 +393,16 @@ def VideosConMasLikes2(catalog,idCategoria):
 def VideosPaisMasLikes(catalog,idCategoria,numeroElementos,paisInteres):
     idCategoria = mp.get(catalog['category'], idCategoria)
     Pais = mp.get(catalog['country'], paisInteres)
-    print(catalog['country'])
     listaPaisViews=lt.newList('ARRAY_LIST',cmpfunction=compareExistenceID)
     if idCategoria and Pais:
         listaViews = me.getValue(idCategoria)['video']
         listaPais = me.getValue(Pais)['video']
-        listaViews = VideosBylikes(listaViews)
+        listaViews = VideosByViews(listaViews)
         i=1
         verifica=True
         while i<=lt.size(listaViews) and verifica:
             elemento=lt.getElement(listaViews,i)
-            if lt.isPresent(listaPais,elemento['video_id']):
+            if lt.isPresent(listaPais,elemento['video_id']) and elemento['country']==paisInteres:
                 lt.addLast(listaPaisViews,elemento)
             if lt.size(listaPaisViews)==numeroElementos:
                 verifica=False
@@ -484,7 +486,7 @@ def compareExistenceID(ID,Lista):
 def VideosByViews(listaOrdenada):
     sub_list = lt.subList(listaOrdenada, 1, lt.size(listaOrdenada))
     sub_list = sub_list.copy()
-    sorted_list = Merge.sort(sub_list, cmpVideosByViews)
+    sorted_list = sa.sort(sub_list, cmpVideosByViews)
     return sorted_list
 
 def VideosBylikes(listaOrdenada):
@@ -511,7 +513,7 @@ def VideosByCategory(catalog):
 def VideosByID(listaOrdenada):
     sub_list = lt.subList(listaOrdenada, 0, lt.size(listaOrdenada))
     sub_list = sub_list.copy()
-    sorted_list = Merge.sort(sub_list, cmpByID)
+    sorted_list = sa.sort(sub_list, cmpByID)
     return sorted_list
 
 def VideosByCategoryID(listaOrdenada):

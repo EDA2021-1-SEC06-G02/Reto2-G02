@@ -46,7 +46,6 @@ def printMenu():
     print("3- Requerimiento 2")
     print("4- Requerimiento 3")
     print("5- Requerimiento 4")
-    print("6- Avance Reto 2, Lab 6")
     print("Escriba cualquier otro número para detener la ejecución del programa")
 
 catalog = {}
@@ -68,29 +67,6 @@ def printResultVideosByViews(listaOrdenada, paisInteres,sample=10):
         video = lt.getElement(listaOrdenada,i)
         print(i,'- Fecha de tendencia: ',video['trending_date'],'; Titulo: '+ video['title'],'; Nombre del Canal: ', video['channel_title'], '; Fecha de publicación', video['publish_time'],'; Visitas del Video: ', video['views'],'; Likes del Video: ',video['likes'],'; Dislikes del Video: ',video['dislikes'])
         i+=1
-
-def printResultVideosByLikes2(listaOrdenada,sample=10):
-    size = lt.size(listaOrdenada)
-    if size <= sample:
-        print("No se pueden imprimir los videos que se están buscando debido a que exceden el número de muestras disponibles para alguno de los parámetros ingresados.")
-        print("Los primeros ", size, " videos con más likes son:")        
-    else:
-        print("Los primeros ", sample, " videos con más likes son:")        
-    i=1
-    video = lt.getElement(listaOrdenada,1)
-    while i<= sample:
-        video1 = lt.getElement(listaOrdenada,i)
-        if i==1:
-            print('Fecha de tendencia: ',video['trending_date'],'; Titulo: '+ video['title'],'; Nombre del Canal: ', video['channel_title'], '; Fecha de publicación', video['publish_time'],'; Visitas del Video: ', video['views'],'; Likes del Video: ',video['likes'],'; Dislikes del Video: ',video['dislikes'])
-            i+=1
-        else:
-            if not(video['video_id']==video1['video_id']):
-                print('Fecha de tendencia: ',video1['trending_date'],'; Titulo: '+ video1['title'],'; Nombre del Canal: ', video1['channel_title'], '; Fecha de publicación', video1['publish_time'],'; Visitas del Video: ', video1['views'],'; Likes del Video: ',video1['likes'],'; Dislikes del Video: ',video1['dislikes'])
-                video = lt.getElement(listaOrdenada,i)
-                i+=1
-            else:
-                i+=1
-                sample+=1
 
 def printResultVideosByLikes(listaOrdenada, paisInteres, TagInteres, sample):
     size = lt.size(listaOrdenada)
@@ -133,7 +109,6 @@ while True:
         video=lt.getElement(catalog['video'],1)
         print('1- Titulo: '+ video['title'],'; Nombre del Canal: ', video['channel_title'], 'Fecha de tendencia: ',video['trending_date'],'; Visitas del Video: ', video['views'],'; Likes del Video: ',video['likes'],'; Dislikes del Video: ',video['dislikes'])
         printTodasLasCategorias(catalog)
-        print(mp.keySet(catalog['country']))
 
     elif inputs == 2:
         if len(catalog)==0:
@@ -143,43 +118,26 @@ while True:
             while numeroElementos>lt.size(catalog['video']) or numeroElementos<=0 :
                 print("Está tratando de comparar más o menos elementos de los que cuenta el catálogo de videos. El máximo de videos que se pueden comprar son: ",lt.size(catalog['video']), ". El mínimo es 1.")
                 numeroElementos= int(input("¿Cuantos elementos quiere comparar?:\t"))
-            if len(cataOrdenPaises)==0:
-                start_time = time.process_time()
-                print("Estamos ordenando la lista por orden de paises esto puede tardar unos cuantos segundos")
-                cataOrdenPaises=controller.OrdenCatalogoPaises(catalog)
-                stop_time = time.process_time()
-                tiempoO = (stop_time - start_time)*1000
-                print("El tiempo de ejecución del ordenamiento es: ",tiempoO)
             start_time = time.process_time()
             categoriaInteres=input("Ingrese el nombre de la categoría de interes:\t")
-            idCategoria=controller.asignarNombreCategoryToID(catalog,categoriaInteres)
+            idCategoria=controller.asignarNombreCategoryToID2(catalog,categoriaInteres)
             if idCategoria==-1:
                 print("La categoría consultada no existe intente nuevamente")
             else:
-                paisInteres = input("Ingrese el nombre del país del cual quiere conocer los videos con más views por categoría:\t")
-                listaVideoViesPais=controller.VideosConMasViewsPorPais(cataOrdenPaises,paisInteres,idCategoria)
+                paisInteres = input("Ingrese el nombre del país del cual quiere conocer los videos con mas views:\t")
+                listaVideoViesPais=controller.VideosPaisMasLikes(catalog,idCategoria,numeroElementos,paisInteres)
                 stop_time = time.process_time()
                 elapsed_time_mseg = (stop_time - start_time)*1000
-                if listaVideoViesPais==-1:
-                    print("El país ingresado no se encuentra en el arreglo, intente con otro país.")
-                else:
-                    printResultVideosByViews(listaVideoViesPais,paisInteres,numeroElementos)
+                printResultVideosByViews(listaVideoViesPais,paisInteres,numeroElementos)
                 print("El tiempo de ejecución de la consulta es: ",elapsed_time_mseg)
 
     elif inputs == 3:
         if len(catalog)==0:
             print("No se han cargado datos al catálogo, por favor realize la opción 1 antes de proseguir.")
         else:
-            if len(cataOrdenPaises)==0:
-                start_time = time.process_time()
-                print("Estamos ordenando la lista por orden de paises esto puede tardar unos cuantos segundos")
-                cataOrdenPaises=controller.OrdenCatalogoPaises(catalog)
-                stop_time = time.process_time()
-                tiempoO = (stop_time - start_time)*1000
-                print("El tiempo de ejecución del ordenamiento es: ",tiempoO)
             start_time = time.process_time()
-            paisInteres = input("Ingrese el nombre del país del cual quiere conocer el video que más días a sido tendencia:\t")
-            result,DiasEnTendencia=VideoPaisConMasTendencia(cataOrdenPaises,paisInteres)
+            paisInteres = input("Ingrese el nombre del país del cual quiere conocer el video que más días a sido tendencia:     ")
+            result,DiasEnTendencia=VideoPaisConMasTendencia(catalog,paisInteres)
             stop_time = time.process_time()
             elapsed_time_mseg = (stop_time - start_time)*1000
             if result==-1:
@@ -243,25 +201,6 @@ while True:
                 print("El pais ingresado no existe en la lista intente nuevamente")
             else:
                 printResultVideosByLikes(listaVideoLikesTag,paisInteres,TagInteres,numeroElementos)
-                print("El tiempo de ejecución de la consulta es: ",elapsed_time_mseg)
-    elif inputs == 6:
-        if len(catalog)==0:
-            print("No se han cargado datos al catálogo, por favor realize la opción 1 antes de proseguir.")
-        else:
-            numeroElementos= int(input("¿Cuantos videos con más views desea conocer?:\t"))
-            while numeroElementos>lt.size(catalog['video']) or numeroElementos<=0 :
-                print("Está tratando de comparar más o menos elementos de los que cuenta el catálogo de videos. El máximo de videos que se pueden comprar son: ",lt.size(catalog['video']), ". El mínimo es 1.")
-                numeroElementos= int(input("¿Cuantos elementos quiere comparar?:\t"))
-            start_time = time.process_time()
-            categoriaInteres=input("Ingrese el nombre de la categoría de interes:\t")
-            idCategoria=controller.asignarNombreCategoryToID2(catalog,categoriaInteres)
-            if idCategoria==-1:
-                print("La categoría consultada no existe intente nuevamente")
-            else:
-                listaVideoViesPais=controller.VideosPaisMasLikes(catalog,idCategoria,numeroElementos,"canada")
-                stop_time = time.process_time()
-                elapsed_time_mseg = (stop_time - start_time)*1000
-                #printResultVideosByLikes2(listaVideoViesPais,numeroElementos)
                 print("El tiempo de ejecución de la consulta es: ",elapsed_time_mseg)
     else:
         sys.exit(0)
