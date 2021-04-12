@@ -257,7 +257,7 @@ while True:
             if idCategoria==-1:
                 print("La categoría consultada no existe intente nuevamente")
             else:
-                listaVideoViesPais=controller.VideosConMasLikes2(catalog,idCategoria)
+                listaVideoViesPais=controller.VideosConMasLikes2(catalog,idCategoria,numeroElementos)
                 stop_time = time.process_time()
                 elapsed_time_mseg = (stop_time - start_time)*1000
                 printResultVideosByLikes2(listaVideoViesPais,numeroElementos)

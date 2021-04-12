@@ -45,7 +45,7 @@ def loadData(catalog):
     #start_memory = getMemory()
 
 
-    #loadCategories(catalog)
+    loadCategories(catalog)
     loadVideos(catalog)
 
     #stop_memory = getMemory()
@@ -84,8 +84,8 @@ def VideoPaisConMasTendencia(catalog,paisInteres):
 def VideosConMasViewsPorPais(catalog,paisInteres,idCategoria):
     return model.VideosConMasViewsPorPais(catalog,paisInteres,idCategoria)
 
-def VideosConMasLikes2(catalog,idCategoria):
-    return model.VideosConMasLikes2(catalog,idCategoria)
+def VideosConMasLikes2(catalog,idCategoria,numeroElementos):
+    return model.VideosPaisMasLikes(catalog,idCategoria,numeroElementos,"canada")
 
 def VideoCategoriaConMasTendencia(catalog,catalogOrdenado,categoria):
     return model.VideoCategoriaConMasTendencia(catalog, catalogOrdenado, categoria)
