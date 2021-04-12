@@ -177,14 +177,6 @@ def busquedaBinariaCategory_Name(listaOrdenada, elemento):
 # Asignar Valores
 
 def asignarNombreCategoryToID(catalog,elemento):
-    categoryName=CategoryByName(catalog)
-    index=busquedaBinariaCategory_Name(categoryName,elemento)
-    if (index==-1):
-        return index
-    category_id=lt.getElement(categoryName,index)['Category_id']
-    return category_id
-
-def asignarNombreCategoryToID2(catalog,elemento):
     elemento=elemento.lower()
     i=1
     Verifica=True
@@ -410,29 +402,27 @@ def VideosPaisMasLikes(catalog,idCategoria,numeroElementos,paisInteres):
         return listaPaisViews
     return None
 
-def VideosConMasLikesPorPaisTag(listaOrdenada,paisInteres,TagInteres,numeroElementos,opcion):
-    indexProvi=busquedaBinariaPaises(listaOrdenada,paisInteres)
-    if(indexProvi==-1):
-        return -1
-    else:
-        listaSoloPaises=subListaDePais(listaOrdenada,indexProvi,paisInteres)
-        listaSoloPaises=VideosBylikes(listaSoloPaises)
-        listaPaisLikesTags = lt.newList('ARRAY_LIST',cmpfunction=compareExistenceID)
+def VideosConMasLikesPorPaisTag(catalog,paisInteres,TagInteres,numeroElementos,opcion):
+    Pais = mp.get(catalog['country'], paisInteres)
+    if Pais:
+        listaPais = me.getValue(Pais)['video']
+        listaPais = VideosBylikes(listaPais)
         i=1
         verifica = True
-        if opcion==1:
-            while ((i<=lt.size(listaSoloPaises)) and verifica):
-                if TagInteres in lt.getElement(listaSoloPaises,i)['tags']:
-                    posElemento = lt.isPresent(listaPaisLikesTags,lt.getElement(listaSoloPaises,i)['video_id'])
+        listaPaisLikesTags=lt.newList('ARRAY_LIST',cmpfunction=compareExistenceID)
+        if opcion==2:
+            while ((i<=lt.size(listaPais)) and verifica):
+                if TagInteres in lt.getElement(listaPais,i)['tags']:
+                    posElemento = lt.isPresent(listaPaisLikesTags,lt.getElement(listaPais,i)['video_id'])
                     if not(posElemento>0):
-                        lt.addLast(listaPaisLikesTags,lt.getElement(listaSoloPaises,i))
+                        lt.addLast(listaPaisLikesTags,lt.getElement(listaPais,i))
                         if lt.size(listaPaisLikesTags)==numeroElementos:
                             verifica=False
                 i+=1
-        elif opcion==2:
-            while ((i<=lt.size(listaSoloPaises)) and verifica):
-                if TagInteres in lt.getElement(listaSoloPaises,i)['tags']:
-                    lt.addLast(listaPaisLikesTags,lt.getElement(listaSoloPaises,i))
+        elif opcion==1:
+            while ((i<=lt.size(listaPais)) and verifica):
+                if TagInteres in lt.getElement(listaPais,i)['tags']:
+                    lt.addLast(listaPaisLikesTags,lt.getElement(listaPais,i))
                     if lt.size(listaPaisLikesTags)==numeroElementos:
                         verifica=False
                 i+=1
@@ -492,7 +482,7 @@ def VideosByViews(listaOrdenada):
 def VideosBylikes(listaOrdenada):
     sub_list = lt.subList(listaOrdenada, 1, lt.size(listaOrdenada))
     sub_list = sub_list.copy()
-    sorted_list = Merge.sort(sub_list, cmpVideosBylikes)
+    sorted_list = sa.sort(sub_list, cmpVideosBylikes)
     return sorted_list
 
 def VideosByCountry(catalog):

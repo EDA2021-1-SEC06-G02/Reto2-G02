@@ -49,8 +49,6 @@ def printMenu():
     print("Escriba cualquier otro número para detener la ejecución del programa")
 
 catalog = {}
-cataOrdenPaises = {}
-cataOrdenCategorias = {}
 
 def initCatalog ():
     return controller.initCatalog()
@@ -120,7 +118,7 @@ while True:
                 numeroElementos= int(input("¿Cuantos elementos quiere comparar?:\t"))
             start_time = time.process_time()
             categoriaInteres=input("Ingrese el nombre de la categoría de interes:\t")
-            idCategoria=controller.asignarNombreCategoryToID2(catalog,categoriaInteres)
+            idCategoria=controller.asignarNombreCategoryToID(catalog,categoriaInteres)
             if idCategoria==-1:
                 print("La categoría consultada no existe intente nuevamente")
             else:
@@ -150,13 +148,9 @@ while True:
         if len(catalog)==0:
             print("No se han cargado datos al catálogo, por favor realize la opción 1 antes de proseguir.")
         else:
-            if len(cataOrdenCategorias)==0:
-                print("Estamos ordenando la lista por orden de categorias, esto puede tardar unos cuantos segundos")
-                tiempoO,cataOrdenCategorias=controller.OrdenCatalogoCategorias(catalog)
-                print("El tiempo de ejecución del ordenamiento es: ",tiempoO)
             categoria = input("Ingrese el nombre de la categoria de la cual quiere conocer el video que más días a sido tendencia:\t")
             start_time = time.process_time()
-            result,DiasEnTendencia=VideoCategoriaConMasTendencia(catalog,cataOrdenCategorias,categoria)
+            result,DiasEnTendencia=VideoCategoriaConMasTendencia(catalog,catalog,categoria)
             stop_time = time.process_time()
             elapsed_time_mseg = (stop_time - start_time)*1000
             if result==-1:
@@ -173,13 +167,6 @@ while True:
             while numeroElementos>lt.size(catalog['video']) or numeroElementos<=0 :
                 print("Está tratando de comparar más o menos elementos de los que cuenta el catálogo de videos. El máximo de videos que se pueden comprar son: ",lt.size(catalog['video']), ". El mínimo es 1.")
                 numeroElementos= int(input("¿Cuantos elementos quiere comparar?:\t"))
-            if len(cataOrdenPaises)==0:
-                start_time = time.process_time()
-                print("Estamos ordenando la lista por orden de paises esto puede tardar unos cuantos segundos")
-                cataOrdenPaises=controller.OrdenCatalogoPaises(catalog)
-                stop_time = time.process_time()
-                tiempoO = (stop_time - start_time)*1000
-                print("El tiempo de ejecución del ordenamiento es: ",tiempoO)
             start_time = time.process_time()
             TagInteres=input("Ingrese el nombre del tag que desea consultar:\t")
             paisInteres = input("Ingrese el nombre del país del cual quiere conocer los videos con más likes en el tag de interés:\t")
@@ -190,11 +177,11 @@ while True:
             opcion=int(input("Ingrese su selección opción:\t"))
             while not(opcion<=2 and opcion>=1):
                 print("Opción invalida intente nuevamente")
-                print("Desea conocer los resultados con videos repetidos?")
+                print("Desea videos repetidos en el resultado de su búsqueda?")
                 print("1- Si")
                 print("2- No")
                 opcion=int(input("Ingrese su selección opción:\t"))
-            listaVideoLikesTag=controller.VideosConMasLikesPorPaisTag(cataOrdenPaises,paisInteres,TagInteres,numeroElementos,opcion)
+            listaVideoLikesTag=controller.VideosConMasLikesPorPaisTag(catalog,paisInteres,TagInteres,numeroElementos,opcion)
             stop_time = time.process_time()
             elapsed_time_mseg = (stop_time - start_time)*1000
             if listaVideoLikesTag==-1:

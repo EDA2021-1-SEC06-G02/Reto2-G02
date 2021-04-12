@@ -98,11 +98,6 @@ def VideosConMasLikesPorPaisTag(listaOrdenada,paisInteres,TagInteres,numeroEleme
 def asignarNombreCategoryToID(catalog,elemento):
     return model.asignarNombreCategoryToID(catalog,elemento)
 
-def asignarNombreCategoryToID2(catalog,elemento):
-    return model.asignarNombreCategoryToID2(catalog,elemento)
-
-
-
 def getTime():
     """
     devuelve el instante tiempo de procesamiento en milisegundos
