@@ -89,8 +89,8 @@ def printTodasLasCategorias(catalog):
         Name = me.getValue(Name)['name']
         print(i,"- ID- ",ID," Name- ",Name)
 
-def VideoCategoriaConMasTendencia(catalog, catalogOrdenado,categoria):
-    return controller.VideoCategoriaConMasTendencia(catalog,catalogOrdenado,categoria)
+def VideoCategoriaConMasTendencia(catalog,categoria,tipo_comparacion):
+    return controller.VideoCategoriaConMasTendencia(catalog,categoria,tipo_comparacion)
 
 """
 Menu principal
@@ -149,12 +149,15 @@ while True:
             print("No se han cargado datos al catálogo, por favor realize la opción 1 antes de proseguir.")
         else:
             categoria = input("Ingrese el nombre de la categoria de la cual quiere conocer el video que más días a sido tendencia:\t")
+            tipo_comparacion = input("Ingrese \'1\' para comparar por id o \'2\' para comparar por titulo:\t")
             start_time = time.process_time()
-            result,DiasEnTendencia=VideoCategoriaConMasTendencia(catalog,catalog,categoria)
+            result,DiasEnTendencia=VideoCategoriaConMasTendencia(catalog,categoria,tipo_comparacion)
             stop_time = time.process_time()
             elapsed_time_mseg = (stop_time - start_time)*1000
             if result==-1:
-                print("La categoria ingresada no se encuentra en el arreglo, intente con otra categoria.")
+                print("La categoria ingresada no se encuentra en el arreglo, intente con otra categoria.\n")
+            elif result==-2:
+                print("El valor ingresado para el tipo de comparación es incorrecto, intente de nuevo.\n")
             else:
                 print("El título del video es: ",result['title'],"; el nombre del canal es: ",result['channel_title'],"; el id de la categoria es: ",result['category_id'],"; sus días siendo tendencia son: ",DiasEnTendencia)
             print("El tiempo de ejecución de la consulta es: ",elapsed_time_mseg)

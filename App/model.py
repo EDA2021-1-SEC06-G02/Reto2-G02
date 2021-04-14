@@ -147,6 +147,20 @@ def busquedaBinariaID(listaOrdenada, elemento):
             i = m + 1
     return -1
 
+def busquedaBinariaTITLE(listaOrdenada, elemento):
+    i, lon = 1, lt.size(listaOrdenada)
+    elemento=elemento.lower()
+    while i <= lon:
+        m = (i + lon) // 2
+        EM = lt.getElement(listaOrdenada,m)['title'].lower()
+        if EM == elemento:
+            return m
+        elif elemento < EM:
+            lon = m - 1
+        else:
+            i = m + 1
+    return -1
+
 def busquedaBinariaCategoryID(listaOrdenada, elemento):
     i, lon = 1, lt.size(listaOrdenada)
     while i <= lon:
@@ -292,28 +306,22 @@ def VideoPaisConMasTendencia(catalog,paisInteres):
         else:
             return -1,-1
 
-def NombreAId (catalog,categoria):
-    id = -1
-    centi = True
-    i = 0
-    while (i < lt.size(catalog["category"]) and centi):
-        if (lt.getElement(catalog['category'],i)["name"].lower() == categoria.lower()):
-            centi = False
-            id = lt.getElement(catalog['category'],i)["Category_id"]
-        i += 1
-    return id
-
-def VideoCategoriaConMasTendencia(catalog,listaOrdenada,categoria):
-    IdCategoria = NombreAId(catalog, categoria)
+def VideoCategoriaConMasTendencia(catalog,categoria,tipo_comparacion):
+    IdCategoria = asignarNombreCategoryToID(catalog,categoria)
     if(IdCategoria==-1):
         return -1,0
+    elif(tipo_comparacion!='1' and tipo_comparacion!='2'):
+        return -2,0
     else:
-        indexProvi=busquedaBinariaCategorias(listaOrdenada,IdCategoria)
-        listaSoloCategoria=subListaDeCategoria(listaOrdenada,indexProvi,IdCategoria)
-        listaOrdenID=VideoConMasTendencia(listaSoloCategoria)
-        listaOrdenDate=VideosPorDate(listaOrdenID)
-        videoTendenciaID,DiasEnTendencia=VideoConMasDiasEnTendenciaCategoria(listaOrdenDate)
-        videoTendencia=lt.getElement(listaOrdenDate,busquedaBinariaID(listaOrdenDate,videoTendenciaID))
+        listaSoloCategoria=me.getValue(mp.get(catalog["category"],IdCategoria))["video"]
+        if (tipo_comparacion =='1'):
+            listaOrdenID=VideoConMasTendencia(listaSoloCategoria)
+            videoTendenciaID,DiasEnTendencia=VideoConMasDiasEnTendenciaCategoria(listaOrdenID)
+            videoTendencia=lt.getElement(listaOrdenID,busquedaBinariaID(listaOrdenID,videoTendenciaID))
+        else:
+            listaOrdenTITLE=VideoConMasTendenciaTITLE(listaSoloCategoria)
+            videoTendenciaTITLE,DiasEnTendencia=VideoConMasDiasEnTendenciaCategoria(listaOrdenTITLE)
+            videoTendencia=lt.getElement(listaOrdenTITLE,busquedaBinariaTITLE(listaOrdenTITLE,videoTendenciaTITLE))
     return videoTendencia,DiasEnTendencia
 
 def VideoConMasDiasEnTendencia(listaOrdenID):
@@ -341,26 +349,29 @@ def VideoConMasDiasEnTendenciaCategoria(listaOrdenID):
     elementoComparado=lt.getElement(listaOrdenID,1)
     listaNueva=lt.newList('ARRAY_LIST',cmpfunction=cmpIgualdadFechas)
     lt.addLast(listaNueva,elementoComparado)
-    contador=lt.size(listaNueva)
+    contador=1
     while i<=lt.size(listaOrdenID):
-        if elementoComparado['video_id'].lower()==lt.getElement(listaOrdenID,i)['video_id'].lower():
+        if elementoComparado['title'].lower()==lt.getElement(listaOrdenID,i)['title'].lower():
             posF=lt.isPresent(listaNueva,lt.getElement(listaOrdenID,i)['trending_date'])
             if not(posF>0):
                 lt.addLast(listaNueva,lt.getElement(listaOrdenID,i))
-                contador=lt.size(listaNueva)
+                contador+=1
         else:
             if contador>Mayor:
                 Mayor=contador
-                MayorID=elementoComparado['video_id'].lower()
+                MayorID=elementoComparado['title'].lower()
             listaNueva=lt.newList('ARRAY_LIST',cmpfunction=cmpIgualdadFechas)
             elementoComparado=lt.getElement(listaOrdenID,i)
             lt.addLast(listaNueva,elementoComparado)
-            contador=lt.size(listaNueva)
+            contador=1
         i+=1
     return MayorID,Mayor
 
 def VideoConMasTendencia(listaOrdenada):
     return VideosByID(listaOrdenada)
+
+def VideoConMasTendenciaTITLE(listaOrdenada):
+    return VideosByTITLE(listaOrdenada) 
 
 def VideosConMasViewsPorPais(listaOrdenada,paisInteres,idCategoria):
     indexProvi=busquedaBinariaPaises(listaOrdenada,paisInteres)
@@ -448,6 +459,9 @@ def cmpByCategory(video1, video2):
 def cmpByID(video1, video2):
     return ((video1['video_id']).lower() < (video2['video_id']).lower())
 
+def cmpByTITLE(video1, video2):
+    return ((video1['title']).lower() < (video2['title']).lower())
+
 def cmpByCategoryID(video1, video2):
     return ((video1['category_id']).lower() < (video2['category_id']).lower())
 
@@ -504,6 +518,12 @@ def VideosByID(listaOrdenada):
     sub_list = lt.subList(listaOrdenada, 0, lt.size(listaOrdenada))
     sub_list = sub_list.copy()
     sorted_list = sa.sort(sub_list, cmpByID)
+    return sorted_list
+
+def VideosByTITLE(listaOrdenada):
+    sub_list = lt.subList(listaOrdenada, 0, lt.size(listaOrdenada))
+    sub_list = sub_list.copy()
+    sorted_list = sa.sort(sub_list, cmpByTITLE)
     return sorted_list
 
 def VideosByCategoryID(listaOrdenada):
