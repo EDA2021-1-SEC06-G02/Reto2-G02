@@ -394,7 +394,7 @@ def VideosPaisMasLikes(catalog,idCategoria,numeroElementos,paisInteres):
         verifica=True
         while i<=lt.size(listaViews) and verifica:
             elemento=lt.getElement(listaViews,i)
-            if lt.isPresent(listaPais,elemento['video_id']) and elemento['country']==paisInteres:
+            if elemento['country']==paisInteres and lt.isPresent(listaPais,elemento['video_id']):
                 lt.addLast(listaPaisViews,elemento)
             if lt.size(listaPaisViews)==numeroElementos:
                 verifica=False
