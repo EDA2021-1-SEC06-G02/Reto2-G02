@@ -72,12 +72,6 @@ def loadCategories(catalog):
 
 # Funciones de ordenamiento
 
-def OrdenCatalogoPaises(catalog):
-    return model.VideosByCountry(catalog)
-
-def OrdenCatalogoCategorias(catalog):
-    return model.VideosByCategory(catalog)
-
 def VideoPaisConMasTendencia(catalog,paisInteres):
     return model.VideoPaisConMasTendencia(catalog, paisInteres)
 

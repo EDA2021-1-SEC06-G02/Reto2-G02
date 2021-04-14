@@ -148,7 +148,7 @@ while True:
         if len(catalog)==0:
             print("No se han cargado datos al catálogo, por favor realize la opción 1 antes de proseguir.")
         else:
-            categoria = input("Ingrese el nombre de la categoria de la cual quiere conocer el video que más días a sido tendencia:\t")
+            categoria = input("Ingrese el nombre de la categoria de la cual quiere conocer el video que más días a sido tendencia:     ")
             tipo_comparacion = input("Ingrese \'1\' para comparar por id o \'2\' para comparar por titulo:\t")
             start_time = time.process_time()
             result,DiasEnTendencia=VideoCategoriaConMasTendencia(catalog,categoria,tipo_comparacion)
