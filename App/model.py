@@ -292,24 +292,12 @@ def VideoPaisConMasTendencia(catalog,paisInteres):
         else:
             return -1,-1
 
-def NombreAId (catalog,categoria):
-    id = -1
-    centi = True
-    i = 0
-    while (i < lt.size(catalog["category"]) and centi):
-        if (lt.getElement(catalog['category'],i)["name"].lower() == categoria.lower()):
-            centi = False
-            id = lt.getElement(catalog['category'],i)["Category_id"]
-        i += 1
-    return id
-
-def VideoCategoriaConMasTendencia(catalog,listaOrdenada,categoria):
-    IdCategoria = NombreAId(catalog, categoria)
+def VideoCategoriaConMasTendencia(catalog,categoria):
+    IdCategoria = asignarNombreCategoryToID(catalog,categoria)
     if(IdCategoria==-1):
         return -1,0
     else:
-        indexProvi=busquedaBinariaCategorias(listaOrdenada,IdCategoria)
-        listaSoloCategoria=subListaDeCategoria(listaOrdenada,indexProvi,IdCategoria)
+        listaSoloCategoria=me.getValue(mp.get(catalog["category"],IdCategoria))["video"]
         listaOrdenID=VideoConMasTendencia(listaSoloCategoria)
         listaOrdenDate=VideosPorDate(listaOrdenID)
         videoTendenciaID,DiasEnTendencia=VideoConMasDiasEnTendenciaCategoria(listaOrdenDate)
@@ -341,13 +329,13 @@ def VideoConMasDiasEnTendenciaCategoria(listaOrdenID):
     elementoComparado=lt.getElement(listaOrdenID,1)
     listaNueva=lt.newList('ARRAY_LIST',cmpfunction=cmpIgualdadFechas)
     lt.addLast(listaNueva,elementoComparado)
-    contador=lt.size(listaNueva)
+    contador=1
     while i<=lt.size(listaOrdenID):
         if elementoComparado['video_id'].lower()==lt.getElement(listaOrdenID,i)['video_id'].lower():
             posF=lt.isPresent(listaNueva,lt.getElement(listaOrdenID,i)['trending_date'])
             if not(posF>0):
                 lt.addLast(listaNueva,lt.getElement(listaOrdenID,i))
-                contador=lt.size(listaNueva)
+                contador+=1
         else:
             if contador>Mayor:
                 Mayor=contador
@@ -355,7 +343,7 @@ def VideoConMasDiasEnTendenciaCategoria(listaOrdenID):
             listaNueva=lt.newList('ARRAY_LIST',cmpfunction=cmpIgualdadFechas)
             elementoComparado=lt.getElement(listaOrdenID,i)
             lt.addLast(listaNueva,elementoComparado)
-            contador=lt.size(listaNueva)
+            contador=1
         i+=1
     return MayorID,Mayor
 

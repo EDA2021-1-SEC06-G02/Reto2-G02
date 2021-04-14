@@ -89,8 +89,8 @@ def printTodasLasCategorias(catalog):
         Name = me.getValue(Name)['name']
         print(i,"- ID- ",ID," Name- ",Name)
 
-def VideoCategoriaConMasTendencia(catalog, catalogOrdenado,categoria):
-    return controller.VideoCategoriaConMasTendencia(catalog,catalogOrdenado,categoria)
+def VideoCategoriaConMasTendencia(catalog,categoria):
+    return controller.VideoCategoriaConMasTendencia(catalog,categoria)
 
 """
 Menu principal
@@ -150,7 +150,7 @@ while True:
         else:
             categoria = input("Ingrese el nombre de la categoria de la cual quiere conocer el video que más días a sido tendencia:\t")
             start_time = time.process_time()
-            result,DiasEnTendencia=VideoCategoriaConMasTendencia(catalog,catalog,categoria)
+            result,DiasEnTendencia=VideoCategoriaConMasTendencia(catalog,categoria)
             stop_time = time.process_time()
             elapsed_time_mseg = (stop_time - start_time)*1000
             if result==-1:

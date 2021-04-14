@@ -87,8 +87,8 @@ def VideosConMasViewsPorPais(catalog,paisInteres,idCategoria):
 def VideosPaisMasLikes(catalog,idCategoria,numeroElementos,paisInteres):
     return model.VideosPaisMasLikes(catalog,idCategoria,numeroElementos,paisInteres)
 
-def VideoCategoriaConMasTendencia(catalog,catalogOrdenado,categoria):
-    return model.VideoCategoriaConMasTendencia(catalog, catalogOrdenado, categoria)
+def VideoCategoriaConMasTendencia(catalog,categoria):
+    return model.VideoCategoriaConMasTendencia(catalog,categoria)
 
 def VideosConMasLikesPorPaisTag(listaOrdenada,paisInteres,TagInteres,numeroElementos,opcion):
     return model.VideosConMasLikesPorPaisTag(listaOrdenada,paisInteres,TagInteres,numeroElementos,opcion)
